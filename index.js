@@ -55,9 +55,8 @@ const PID_FILE = 'Process_ID.txt';
 async function go(args) {
     const resources = {};
     try {
-      const port = getPort(args[0]);
+      const port = process.env.PORT || getPort(args[0]);
       const dbUrl = process.env.MONGODB_URI;
-      console.log(dbUrl);
       const file_processor = processor.init();
 
       const pcDatabase = new PCDatabase(dbUrl);
