@@ -43,20 +43,21 @@ async function shutdown(event, resources) {
       }
     }
 }
-  
+
 function cleanupResources(resources) {
     const events = [ 'SIGINT', 'SIGTERM', 'exit' ];
     for (const event of events) {
         process.on(event, async () => await shutdown(event, resources));
     }
 }
-  
+
 const PID_FILE = 'Process_ID.txt';
 async function go(args) {
     const resources = {};
     try {
       const port = getPort(args[0]);
-      const dbUrl = args[1];
+      const dbUrl = process.env.MONGODB_URI;
+      console.log(dbUrl);
       const file_processor = processor.init();
 
       const pcDatabase = new PCDatabase(dbUrl);
@@ -75,7 +76,7 @@ async function go(args) {
   }
 
 
-if (process.argv.length < 4) { 
+if (process.argv.length < 3) {
     usage();
 } else {
     // argv[0] = /usr/local/bin/node

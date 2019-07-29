@@ -10,9 +10,9 @@ class GNCDatabase {
 
     // URL: mongodb://localhost:27017/databaseName
 
-  constructor(dbUrl) {  
-    let [,databaseName] = REG_DATABASE_NAME.exec(dbUrl);
-    let [,serverUrl] = REG_SERVER_URL.exec(dbUrl);
+  constructor(dbUrl) {
+    let databaseName = 'heroku_hsmv87lf';
+    let serverUrl = dbUrl;
 
     this.databaseName = databaseName;
     this.serverUrl = serverUrl;
@@ -29,7 +29,7 @@ class GNCDatabase {
       console.log(err.message + "\nDatabase FAILED to connect, check if server is online or port is correct");
       process.exit();
     }
-    
+
     assert(this.mongoDBConnection != null);
     if (this.mongoDBConnection.isConnected()) console.log("Database Connected");
     else {
@@ -65,7 +65,7 @@ class GNCDatabase {
    *  close any database connections.
    */
   async close() {
-    if (this.mongoDBConnection != null) 
+    if (this.mongoDBConnection != null)
         await this.mongoDBConnection.close();
     console.log("MongoDB connection closed");
   }
