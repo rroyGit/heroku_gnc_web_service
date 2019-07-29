@@ -34,7 +34,7 @@ function init (port, processor, pcDatabase) {
 
     setupRoutes(app);
 
-    const server = app.listen(port, "0.0.0.0", async function() {
+    const server = app.listen(port, async function() {
       console.log(`PID ${process.pid} listening on port ${port}`);
     });
     return server;
@@ -49,6 +49,9 @@ function setupRoutes(app) {
     //-----------------------------------------------TEMP----------------------
     // get last temperature reading from database with a sensorId
     // (e.g. /temp/1)
+
+    app.get('/', (req, res) => {res.send("It is ALIVE!")});
+
     app.get(`${TEMP}/:sensorId`, getTemp(app));
 
     // set temperature reading to database with a sensorId
