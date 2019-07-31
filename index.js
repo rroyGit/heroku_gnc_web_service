@@ -27,21 +27,26 @@ function getPort(portArg) {
 
 async function shutdown(event, resources) {
     if (Object.keys(resources).length > 0) {
-      console.log(`shutting down on ${event}`);
+      console.log(`\nShutting down on ${event}`);
+
       if (resources.server) {
         await resources.server.close();
         delete resources.server;
       }
+
       if (resources.databaseConnection) {
         await resources.databaseConnection.clear();
         await resources.databaseConnection.close();
         delete resources.databaseConnection;
       }
+
       if (resources.timer) {
         clearInterval(resources.timer);
         delete resources.timer;
       }
     }
+
+      process.exit();
 }
 
 function cleanupResources(resources) {
@@ -56,7 +61,7 @@ async function go(args) {
     const resources = {};
     try {
       const port = process.env.PORT || getPort(args[0]);
-      const dbUrl = process.env.MONGODB_URI;
+      const dbUrl = process.env.MONGODB_URI || args[1];
       const file_processor = processor.init();
 
       const pcDatabase = new PCDatabase(dbUrl);

@@ -11,8 +11,9 @@ class GNCDatabase {
     // URL: mongodb://localhost:27017/databaseName
 
   constructor(dbUrl) {
-    let databaseName = 'heroku_hsmv87lf';
-    let serverUrl = dbUrl;
+    console.log(dbUrl);
+    let [,databaseName] = REG_DATABASE_NAME.exec(dbUrl);
+    let [,serverUrl] = REG_SERVER_URL.exec(dbUrl);
 
     this.databaseName = databaseName;
     this.serverUrl = serverUrl;
@@ -65,9 +66,10 @@ class GNCDatabase {
    *  close any database connections.
    */
   async close() {
-    if (this.mongoDBConnection != null)
+    if (this.mongoDBConnection != null) {
         await this.mongoDBConnection.close();
-    console.log("MongoDB connection closed");
+        console.log("MongoDB connection closed");
+    } else console.log("MongoDB connection failed to close");
   }
 
   /** Clear database */
@@ -78,9 +80,11 @@ class GNCDatabase {
 
         let collectionEntry;
         while (collectionEntry = iter.next().value) {
-        await this.databaseConnection.dropCollection(collectionEntry[1]);
+          await this.databaseConnection.dropCollection(collectionEntry[1]);
         }
-    }
+
+        console.log("Database cleared");
+    } else console.log("Database not cleared");
   }
 
   async createCollection(collectionName) {
