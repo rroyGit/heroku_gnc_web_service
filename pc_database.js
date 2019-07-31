@@ -13,7 +13,7 @@ class GNCDatabase {
   constructor(dbUrl) {
     console.log(dbUrl);
     let [,databaseName] = REG_DATABASE_NAME.exec(dbUrl);
-    let [,serverUrl] = REG_SERVER_URL.exec(dbUrl);
+    let serverUrl = dbUrl;
 
     this.databaseName = databaseName;
     this.serverUrl = serverUrl;
