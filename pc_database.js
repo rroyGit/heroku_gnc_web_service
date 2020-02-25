@@ -32,15 +32,17 @@ class GNCDatabase {
     }
 
     assert(this.mongoDBConnection != null);
-    if (this.mongoDBConnection.isConnected()) console.log("Database Connected");
-    else {
+    if (!this.mongoDBConnection.isConnected()) {
       console.log("Database NOT Connected");
       process.exit();
     }
 
+    console.log("Database Connected");
+
     this.databaseConnection = await this.mongoDBConnection.db(this.databaseName);
 
-    let collectionNames = this.databaseConnection.getCollectionNames();
+    let collectionNames = this.databaseConnection.runCommand( { listCollections: 1.0,
+      authorizedCollections: true, nameOnly: true } );
 
     // create collection for storing various telemetry data such as temperature readin
     if (!collectionNames.includes("Temperature")) {
