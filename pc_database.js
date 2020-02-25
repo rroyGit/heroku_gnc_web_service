@@ -41,23 +41,29 @@ class GNCDatabase {
 
     this.databaseConnection = await this.mongoDBConnection.db(this.databaseName);
 
-    // create collection for storing various telemetry data such as temperature readin
+    // create collection for storing telemetry data such as temperature readings
     this.tempCollection = await this.createCollection("Temperature");
-    if (!this.tempCollection.findOne()) {
+    if (await this.tempCollection.findOne()) {
+
+    } else {
       for (i of [...Array[4].keys()].map(e => e + 1)) {
         await this.writeTemp(`${i}`,'-1','0');
       }
     }
 
     this.distCollection = await this.createCollection("Distance");
-    if (!this.distCollection.findOne()) {
+    if (await this.distCollection.findOne()) {
+
+    } else {
       for (i of [...Array[4].keys()].map(e => e + 1)) {
         await this.writeDist(`${i}`,'-1','0');
       }
     }
 
-    this.distCollection = await this.createCollection("Speed");
-    if (!this.distCollection.findOne()) {
+    this.speedCollection = await this.createCollection("Speed");
+    if (await this.speedCollection.findOne()) {
+
+    } else {
       for (i of [...Array[4].keys()].map(e => e + 1)) {
         await this.writeSpeed(`${i}`,'-1','0');
       }
