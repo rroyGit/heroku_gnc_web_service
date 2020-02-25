@@ -40,26 +40,29 @@ class GNCDatabase {
 
     this.databaseConnection = await this.mongoDBConnection.db(this.databaseName);
 
-    // create collection for storing various telemetry data such as temperature readings
-    this.tempCollection = await this.createCollection("Temperature");
-    this.distCollection = await this.createCollection("Distance");
-    this.speedCollection = await this.createCollection("Speed");
+    let collectionNames = this.databaseConnection.getCollectionNames();
 
-    // init value to -1
-    await this.writeTemp('1','-1','0');
-    await this.writeTemp('2','-1','0');
-    await this.writeTemp('3','-1','0');
-    await this.writeTemp('4','-1','0');
+    // create collection for storing various telemetry data such as temperature readin
+    if (!collectionNames.includes("Temperature")) {
+      this.tempCollection = await this.createCollection("Temperature");
+      for (i of [...Array[4].keys()].map(e => e + 1)) {
+        await this.writeTemp(`${i}`,'-1','0');
+      }
+    }
 
-    await this.writeDist('1','-1','0');
-    await this.writeDist('2','-1','0');
-    await this.writeDist('3','-1','0');
-    await this.writeDist('4','-1','0');
+    if (!collectionNames.includes("Distance")) {
+      this.distCollection = await this.createCollection("Distance");
+      for (i of [...Array[4].keys()].map(e => e + 1)) {
+        await this.writeDist(`${i}`,'-1','0');
+      }
+    }
 
-    await this.writeSpeed('1','-1','0');
-    await this.writeSpeed('2','-1','0');
-    await this.writeSpeed('3','-1','0');
-    await this.writeSpeed('4','-1','0');
+    if (!collectionNames.includes("Speed")) {
+      this.distCollection = await this.createCollection("Speed");
+      for (i of [...Array[4].keys()].map(e => e + 1)) {
+        await this.writeSpeed(`${i}`,'-1','0');
+      }
+    }
   }
 
   /** Release all resources held by this doc-finder.  Specifically,
