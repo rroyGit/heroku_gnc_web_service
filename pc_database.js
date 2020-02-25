@@ -43,30 +43,36 @@ class GNCDatabase {
 
     // create collection for storing telemetry data such as temperature readings
     this.tempCollection = await this.createCollection("Temperature");
-    if (await this.tempCollection.findOne()) {
+    let doc = await this.tempCollection.findOne();
+    if (doc) {
 
     } else {
-      for (i of [...Array[4].keys()].map(e => e + 1)) {
-        await this.writeTemp(`${i}`,'-1','0');
-      }
+        await this.writeTemp('1','-1','0');
+        await this.writeTemp('2','-1','0');
+        await this.writeTemp('3','-1','0');
+        await this.writeTemp('4','-1','0');
     }
 
     this.distCollection = await this.createCollection("Distance");
-    if (await this.distCollection.findOne()) {
+    doc = await this.distCollection.findOne();
+    if (doc) {
 
     } else {
-      for (i of [...Array[4].keys()].map(e => e + 1)) {
-        await this.writeDist(`${i}`,'-1','0');
-      }
+      await this.writeDist('1','-1','0');
+      await this.writeDist('2','-1','0');
+      await this.writeDist('3','-1','0');
+      await this.writeDist('4','-1','0');
     }
 
     this.speedCollection = await this.createCollection("Speed");
-    if (await this.speedCollection.findOne()) {
+    doc = await this.speedCollection.findOne();
+    if (doc) {
 
     } else {
-      for (i of [...Array[4].keys()].map(e => e + 1)) {
-        await this.writeSpeed(`${i}`,'-1','0');
-      }
+      await this.writeSpeed('1','-1','0');
+      await this.writeSpeed('2','-1','0');
+      await this.writeSpeed('3','-1','0');
+      await this.writeSpeed('4','-1','0');
     }
   }
 
