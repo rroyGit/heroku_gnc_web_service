@@ -4,6 +4,7 @@ const assert = require('assert');
 const mongo = require('mongodb').MongoClient;
 
 const {inspect} = require('util');
+const collectionNames = ["Temperature", "Distance", "Speed"];
 
 
 class GNCDatabase {
@@ -42,33 +43,28 @@ class GNCDatabase {
     this.databaseConnection = await this.mongoDBConnection.db(this.databaseName);
 
     // create collection for storing telemetry data such as temperature readings
-    this.tempCollection = await this.createCollection("Temperature");
+    this.tempCollection = await this.createCollection(collectionNames[0]);
     let doc = await this.tempCollection.findOne();
-    if (doc) {
-
-    } else {
-        await this.writeTemp('1','-1','0');
-        await this.writeTemp('2','-1','0');
+    console.log(`collection existence is ${doc}`)
+    if (!doc) {
+        await this.writeTemp('1','-2','0');
+        await this.writeTemp('2','-2','0');
         await this.writeTemp('3','-1','0');
         await this.writeTemp('4','-1','0');
     }
 
-    this.distCollection = await this.createCollection("Distance");
+    this.distCollection = await this.createCollection(collectionNames[1]);
     doc = await this.distCollection.findOne();
-    if (doc) {
-
-    } else {
+    if (!doc) {
       await this.writeDist('1','-1','0');
       await this.writeDist('2','-1','0');
       await this.writeDist('3','-1','0');
       await this.writeDist('4','-1','0');
     }
 
-    this.speedCollection = await this.createCollection("Speed");
+    this.speedCollection = await this.createCollection(collectionNames[2]);
     doc = await this.speedCollection.findOne();
-    if (doc) {
-
-    } else {
+    if (!doc) {
       await this.writeSpeed('1','-1','0');
       await this.writeSpeed('2','-1','0');
       await this.writeSpeed('3','-1','0');
@@ -94,7 +90,10 @@ class GNCDatabase {
 
         let collectionEntry;
         while (collectionEntry = iter.next().value) {
-          await this.databaseConnection.dropCollection(collectionEntry[1]);
+          //ignore Heroku MongoDB system collection
+          if (collectionEntry !== "system.indexes") {
+            await this.databaseConnection.dropCollection(collectionEntry[1]);
+          }
         }
 
         console.log("Database cleared");

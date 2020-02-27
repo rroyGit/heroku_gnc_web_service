@@ -27,7 +27,7 @@ function getPort(portArg) {
 
 async function shutdown(event, resources) {
     if (Object.keys(resources).length > 0) {
-      console.log(`\nShutting down on ${event}`);
+      console.log(`\nBing Web Service is ... shutting down on ... ${event}`);
 
       if (resources.server) {
         await resources.server.close();
@@ -35,16 +35,11 @@ async function shutdown(event, resources) {
       }
 
       if (resources.databaseConnection) {
-        await resources.databaseConnection.clear();
+        //don't clear heroku MongoDB database collections
+        //await resources.databaseConnection.clear();
         await resources.databaseConnection.close();
         delete resources.databaseConnection;
       }
-
-      if (resources.timer) {
-        clearInterval(resources.timer);
-        delete resources.timer;
-      }
-    }
 
       process.exit();
 }
@@ -70,11 +65,9 @@ async function go(args) {
 
       resources.server = pcServer.init(port, file_processor, pcDatabase);
       await writeFile(PID_FILE, `${process.pid}\n`);
-    }
-    catch (err) {
+    } catch (err) {
       console.error(err);
-    }
-    finally {
+    } finally {
       cleanupResources(resources);
     }
   }
