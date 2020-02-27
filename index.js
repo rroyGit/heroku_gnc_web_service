@@ -40,8 +40,8 @@ async function shutdown(event, resources) {
         await resources.databaseConnection.close();
         delete resources.databaseConnection;
       }
-
-      process.exit();
+    }
+    process.exit();
 }
 
 function cleanupResources(resources) {
