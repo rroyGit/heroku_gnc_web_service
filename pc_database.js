@@ -189,6 +189,5 @@ const MONGO_OPTIONS = {
   useNewUrlParser: true
 };
 
-const REG_DATABASE_NAME = /\/(\w+)$/g;
-
+const REG_DATABASE_NAME = /\/(\w+)?/g;
 const REG_SERVER_URL = /(^.*)\//g
